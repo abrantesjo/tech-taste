@@ -39,87 +39,99 @@ class CheckoutScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              Column(
-                children: List.generate(dishMap.length, (index) {
-                  Dish dish = dishMap.keys.toList()[index];
-                  int quantity = dishMap[dish]!;
-
-                  return Card(
-                    color: const Color(0xFF2E2B40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+              if (dishMap.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(top: 40),
+                  child: Center(
+                    child: Text(
+                      "Sua sacola está vazia 🛍️",
+                      style: TextStyle(color: Colors.white70, fontSize: 16),
                     ),
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              'assets/dishes/default.png',
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
+                  ),
+                )
+              else
+                Column(
+                  children: List.generate(dishMap.length, (index) {
+                    Dish dish = dishMap.keys.toList()[index];
+                    int quantity = dishMap[dish]!;
+
+                    return Card(
+                      color: const Color(0xFF2E2B40),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.asset(
+                                'assets/dishes/default.png',
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    dish.name,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "R\$ ${dish.price.toStringAsFixed(2)}",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Column(
                               children: [
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_upward),
+                                  color: AppColors.mainColor,
+                                  onPressed: () {
+                                    bagProvider.addAllDishes([dish]);
+                                  },
+                                ),
                                 Text(
-                                  dish.name,
+                                  quantity.toString(),
                                   style: const TextStyle(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.w600,
                                     color: Colors.white,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  "R\$ ${dish.price.toStringAsFixed(2)}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white70,
-                                  ),
+                                IconButton(
+                                  icon: const Icon(Icons.arrow_downward),
+                                  color: AppColors.mainColor,
+                                  onPressed: () {
+                                    bagProvider.removeDish(dish);
+                                  },
                                 ),
                               ],
                             ),
-                          ),
-                          Column(
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.arrow_upward),
-                                color: AppColors.mainColor,
-                                onPressed: () {
-                                  bagProvider.addAllDishes([dish]);
-                                },
-                              ),
-                              Text(
-                                quantity.toString(),
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.arrow_downward),
-                                color: AppColors.mainColor,
-                                onPressed: () {
-                                  bagProvider.removeDish(dish);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
-              ),
+                    );
+                  }),
+                ),
             ],
           ),
         ),
